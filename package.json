@@ -1,0 +1,26 @@
+{
+  "name": "todone",
+  "version": "1.0.0",
+  "description": "todone is a todo api for a bloc project.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/aizkhaj/todone.git"
+  },
+  "author": "Aizaz Khaja <aizazkj@gmail.com> (http://aizaz.tech)",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/aizkhaj/todone/issues"
+  },
+  "homepage": "https://github.com/aizkhaj/todone#readme",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
+    "express": "^4.15.4",
+    "mongoose": "^4.11.7",
+    "nodemon": "^1.11.0"
+  }
+}
