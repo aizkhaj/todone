@@ -3,7 +3,7 @@ mongoose.Promise = global.Promise;
 
 const listSchema = new mongoose.Schema({
   user_id: Schema.Types.ObjectId,
-  item_id: Schema.Types.ObjectId,
+  items: [itemSchema],
   title: String,
   private: Boolean
 });
