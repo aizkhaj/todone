@@ -15,6 +15,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // This creates a model using the specified schema.
-
+const User = mongoose.model('User', userSchema);
 // This makes the model available to our Node app.
-module.exports = mongoose.model('User', userSchema);
+module.exports = {model: User, schema: userSchema};

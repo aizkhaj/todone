@@ -15,7 +15,24 @@ router.route('/login')
     res.json("This is where a user can log in");
   });
 
-router.route('/user')
+router.route('/:user_id')
   .get(usersController.showProfile);
+
+router.route('/lists')
+  .get(listsController.allLists);
+
+router.route('/lists/:list_id')
+  .get(listsController.showList);
+
+router.route('/:list_id/new')
+  .get(listsController.newList)
+  .post(listsController.createList);
+
+router.route('/:item_id/new')
+  .get(itemsController.newItem)
+  .post(itemsController.createItem);
+
+router.route('/:item_id/delete')
+  .delete(itemsController.deleteItem);
 
 module.exports = router;

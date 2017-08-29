@@ -14,12 +14,14 @@ const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
+// import all of our models
+require('./models/User');
+require('./models/Item');
+require('./models/List');
+
 // mounts the routes.js route file
 const routes = require('./routes/routes');
 app.use('/api/v1', routes);
-
-// import all of our models
-require('./models/User');
 
 // set the server to listen on port
 app.set('port', process.env.PORT || 7777);
