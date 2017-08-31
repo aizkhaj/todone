@@ -24,15 +24,15 @@ router.route('/lists')
 router.route('/lists/:list_id')
   .get(listsController.showList);
 
-router.route('/:list_id/new')
+router.route('/lists/new')
   .get(listsController.newList)
   .post(listsController.createList);
 
-router.route('/:item_id/new')
+router.route('/lists/:list_id/items/new')
   .get(itemsController.newItem)
   .post(itemsController.createItem);
 
-router.route('/:item_id/delete')
+router.route('items/:item_id/delete')
   .delete(itemsController.deleteItem);
 
 module.exports = router;

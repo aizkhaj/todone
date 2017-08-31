@@ -1,7 +1,9 @@
 const mongoose = require('mongoose');
+const Schema = mongoose.Schema;
+const List = require('../models/List');
 mongoose.Promise = global.Promise;
 
-const userSchema = new mongoose.Schema({
+const userSchema = new Schema({
   username: {
     type: String,
     trim: true,
@@ -11,7 +13,9 @@ const userSchema = new mongoose.Schema({
   password: {
     type: String,
     required: true
-  }
+  },
+  lists: [List.schema]
+  // embedded Lists document/model here so that we can say that each User has their own array of list objects.
 });
 
 // This creates a model using the specified schema.

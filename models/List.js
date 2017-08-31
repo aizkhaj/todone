@@ -3,7 +3,7 @@ const Schema = mongoose.Schema;
 const Item = require('../models/Item')
 mongoose.Promise = global.Promise;
 
-const listSchema = new mongoose.Schema({
+const listSchema = new Schema({
   user_id: Schema.Types.ObjectId,
   items: [Item.schema],
   title: String,

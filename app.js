@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
+// instantiate an express app.
+const app = express();
 // import environment variables
 require('dotenv').config({path: 'variables.env'});
 
@@ -8,9 +10,6 @@ require('dotenv').config({path: 'variables.env'});
 mongoose.connect(process.env.DATABASE, {
   useMongoClient: true
 });
-
-// instantiate an express app.
-const app = express();
 
 app.use(bodyParser.urlencoded({extended: true}));
 
