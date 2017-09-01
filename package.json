@@ -4,7 +4,7 @@
   "description": "todone is a todo api for a bloc project.",
   "main": "app.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jasmine"
   },
   "repository": {
     "type": "git",
@@ -21,9 +21,13 @@
     "dotenv": "^4.0.0",
     "express": "^4.15.4",
     "jsonwebtoken": "^7.4.3",
+    "jwt-simple": "^0.5.1",
     "mongoose": "^4.11.7",
     "nodemon": "^1.11.0",
     "passport": "^0.4.0",
     "passport-jwt": "^3.0.0"
+  },
+  "devDependencies": {
+    "jasmine": "^2.8.0"
   }
 }

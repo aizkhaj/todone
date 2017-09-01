@@ -10,6 +10,11 @@ router.route('/')
     res.json("Nothing to see here, this is API mode!")
   });
 
+router.route('/token')
+  .post((req, res) => {
+    
+  });
+
 router.route('/login')
   .get((req, res) => {
     res.json("This is where a user can log in");
