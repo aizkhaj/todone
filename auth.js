@@ -8,25 +8,27 @@ const userModel = require('./models/User.js');
 const config = require('./config.js');
 const ExtractJwt = passportJWT.ExtractJwt;
 const Strategy = passportJWT.Strategy;
-const params = {
+const options = {
   secretOrKey: config.jwtSecret,
   jwtFromRequest: ExtractJwt.fromAuthHeaderWithScheme('jwt')
 };
 
 module.exports = () => {
-  const strategy = new Strategy(params, (payload, done) => {
+  const strategy = new Strategy(options, (payload, done) => {
     const userPromise = userModel.model.findById(payload.id).exec();
-    console.log(user);
-    userPromise.then( user => {})
-    if (user) {
-      return done(null, {
-        id: user.id
-      });
-    } else {
-      return done(new Error("User not found"), null);
-    }
+    userPromise.then(user => {
+      if (user) {
+        return done(null, {
+          id: user.id
+        });
+      } else {
+       return done(new Error("User not found"), null);
+      }
+    });
   });
+
   passport.use(strategy);
+  
   return {
     initialize: () => {
       return passport.initialize();
