@@ -4,7 +4,8 @@
 require('dotenv').config({path: 'variables.env'});
 const passport = require('passport');
 const passportJWT = require('passport-jwt');
-const userModel = require('./models/User.js');
+const User = require('./models/User.js');
+const userModel = User.model;
 const config = require('./config.js');
 const ExtractJwt = passportJWT.ExtractJwt;
 const Strategy = passportJWT.Strategy;
@@ -15,7 +16,7 @@ const options = {
 
 module.exports = () => {
   const strategy = new Strategy(options, (payload, done) => {
-    const userPromise = userModel.model.findById(payload.id).exec();
+    const userPromise = userModel.findById(payload.id).exec();
     userPromise.then(user => {
       if (user) {
         return done(null, {
@@ -28,7 +29,7 @@ module.exports = () => {
   });
 
   passport.use(strategy);
-  
+
   return {
     initialize: () => {
       return passport.initialize();

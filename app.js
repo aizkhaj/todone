@@ -19,9 +19,10 @@ app.use(auth.initialize());
 
 
 // import all of our models
-require('./models/User');
-require('./models/Item');
-require('./models/List');
+const User = require('./models/User');
+const userModel = User.model;
+const Item = require('./models/Item');
+const List = require('./models/List');
 
 // mounts the routes.js route file
 const routes = require('./routes/routes');
