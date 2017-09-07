@@ -6,6 +6,7 @@ const usersController = require('../controllers/usersController');
 const listsController = require('../controllers/listsController');
 const itemsController = require('../controllers/itemsController');
 const jwt = require("jwt-simple");
+const passport = require('passport');
 const auth = require("../auth.js")();
 const config = require('../config.js');
 
@@ -22,18 +23,17 @@ router.route('/login')
       var password = req.body.password;
     }
 
-    const userPromise = userModel.find({username: username, password: password}).exec();
+    const userPromise = userModel.findOne({username: username, password: password}).exec();
 
     userPromise.then(user => {
-      console.log(user[0].password);
-
       if (!user) {
         res.status(401).json({message: "No such user found"});
       }
 
-      if (user[0].password === req.body.password) {
+      if (user.password === req.body.password) {
         // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
         const payload = {id: user.id};
+        console.log(payload);
         const token = jwt.encode(payload, config.jwtSecret);
         res.json({
           message: "here goes thy token.",
@@ -45,14 +45,13 @@ router.route('/login')
     });
   });
 
-router.route('/user/:user_id')
-  .get(usersController.showProfile);
-
 router.route('/user')
   .get(auth.authenticate(), (req, res) => {
-    console.log('user: ' + req.user);
     res.json(userModel[req.user.id]);
   });
+
+router.route('/user/:user_id')
+  .get(usersController.showProfile);
 
 router.route('/lists')
   .get(listsController.allLists);
