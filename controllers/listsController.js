@@ -9,10 +9,12 @@ exports.showList = (req, res) => {
   res.json("This is where an individual list shows up.");
 };
 
-exports.newList = (req, res) => {
-  res.json("This is where you create a new list on a form.")
-};
-
 exports.createList = (req, res) => {
-  res.json("This sends a post request to create the new list from the form.")
+  const list = {
+    user_id: req.user.id,
+    title: req.body.title,
+    private: req.body.private
+  }
+  List.create(list);
+  res.json({message: "List created."});
 };

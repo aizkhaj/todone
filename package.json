@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/aizkhaj/todone#readme",
   "dependencies": {
+    "bcrypt": "^1.0.3",
     "body-parser": "^1.17.2",
     "dotenv": "^4.0.0",
     "express": "^4.15.4",

@@ -50,6 +50,9 @@ router.route('/user')
     res.json(userModel[req.user.id]);
   });
 
+router.route('/user/new')
+  .post(usersController.createUser);
+
 router.route('/user/:user_id')
   .get(usersController.showProfile);
 
@@ -60,11 +63,9 @@ router.route('/lists/:list_id')
   .get(listsController.showList);
 
 router.route('/lists/new')
-  .get(listsController.newList)
-  .post(listsController.createList);
+  .post(auth.authenticate(), listsController.createList);
 
 router.route('/lists/:list_id/items/new')
-  .get(itemsController.newItem)
   .post(itemsController.createItem);
 
 router.route('items/:item_id/delete')

@@ -2,6 +2,8 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const auth = require('./auth.js')();
+const bcrypt = require('bcrypt');
+
 // instantiate an express app.
 const app = express();
 // import environment variables
