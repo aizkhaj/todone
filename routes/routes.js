@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/User.js');
 const userModel = User.model;
 const usersController = require('../controllers/usersController');
@@ -23,25 +24,41 @@ router.route('/login')
       var password = req.body.password;
     }
 
-    const userPromise = userModel.findOne({username: username, password: password}).exec();
+    const userPromise = userModel.findOne({ username: username, password: password }).exec();
 
     userPromise.then(user => {
       if (!user) {
-        res.status(401).json({message: "No such user found"});
+        res.status(401).json({ message: "No such user found" });
       }
 
-      if (user.password === req.body.password) {
-        // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-        const payload = {id: user.id};
-        console.log(payload);
-        const token = jwt.encode(payload, config.jwtSecret);
-        res.json({
-          message: "here goes thy token.",
-          token: token
-        });
-      } else {
-        res.status(401).json({message: "passwords did not match"});
-      }
+      bcrypt.compare(req.body.password, user.password, (err, res) => {
+        if (err) {
+          return Error("Whoops, something went wrong!");
+        } else {
+          // res === true
+          const payload = { id: user.id };
+          console.log(payload);
+          const token = jwt.encode(payload, config.jwtSecret);
+          res.json({
+            message: "here goes thy token.",
+            token: token
+          });
+        }
+      });
+
+
+      // if (user.password === req.body.password) {
+      //   // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
+      //   const payload = {id: user.id};
+      //   console.log(payload);
+      //   const token = jwt.encode(payload, config.jwtSecret);
+      //   res.json({
+      //     message: "here goes thy token.",
+      //     token: token
+      //   });
+      // } else {
+      //   res.status(401).json({message: "passwords did not match"});
+      // }
     });
   });
 
