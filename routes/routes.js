@@ -23,42 +23,34 @@ router.route('/login')
       var username = req.body.username;
       var password = req.body.password;
     }
-
-    const userPromise = userModel.findOne({ username: username, password: password }).exec();
+    console.log(req.body);
+    const userPromise = userModel.findOne({ username: username}).exec();
 
     userPromise.then(user => {
+      console.log(user);
       if (!user) {
-        res.status(401).json({ message: "No such user found" });
+        return res.status(401).json({ message: "No such user found" });
       }
-
-      bcrypt.compare(req.body.password, user.password, (err, res) => {
-        if (err) {
-          return Error("Whoops, something went wrong!");
-        } else {
-          // res === true
+      
+      bcrypt.compare(req.body.password, user.password)
+        .then((response) => {
+          if (!response) {
+            return res.status(401).json({message: "passwords did not match"});
+          }
+        // res === true
           const payload = { id: user.id };
           console.log(payload);
           const token = jwt.encode(payload, config.jwtSecret);
-          res.json({
+          return res.json({
             message: "here goes thy token.",
             token: token
           });
-        }
-      });
-
-
-      // if (user.password === req.body.password) {
-      //   // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-      //   const payload = {id: user.id};
-      //   console.log(payload);
-      //   const token = jwt.encode(payload, config.jwtSecret);
-      //   res.json({
-      //     message: "here goes thy token.",
-      //     token: token
-      //   });
-      // } else {
-      //   res.status(401).json({message: "passwords did not match"});
-      // }
+        })
+        .catch((err) => {
+          console.log("Failed!", err);
+        });
+    }).catch((err) => {
+      console.log("Failed!", err);
     });
   });
 

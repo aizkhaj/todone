@@ -18,7 +18,7 @@ bcrypt.hash('hello', 10, (err, hash) => {
     return Error("Whoops, something went wrong!");
   } else {
     const admin = new userModel({
-      username: 'aizkk',
+      username: "aizkk",
       password: hash
     });
     admin.save();
