@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const bcrypt = require('bcryptjs');
 const User = require('../models/User.js');
 const userModel = User.model;
 const usersController = require('../controllers/usersController');
@@ -22,26 +23,34 @@ router.route('/login')
       var username = req.body.username;
       var password = req.body.password;
     }
-
-    const userPromise = userModel.findOne({username: username, password: password}).exec();
+    console.log(req.body);
+    const userPromise = userModel.findOne({ username: username}).exec();
 
     userPromise.then(user => {
+      console.log(user);
       if (!user) {
-        res.status(401).json({message: "No such user found"});
+        return res.status(401).json({ message: "No such user found" });
       }
-
-      if (user.password === req.body.password) {
-        // from now on we'll identify the user by the id and the id is the only personalized value that goes into our token
-        const payload = {id: user.id};
-        console.log(payload);
-        const token = jwt.encode(payload, config.jwtSecret);
-        res.json({
-          message: "here goes thy token.",
-          token: token
+      
+      bcrypt.compare(req.body.password, user.password)
+        .then((response) => {
+          if (!response) {
+            return res.status(401).json({message: "passwords did not match"});
+          }
+        // res === true
+          const payload = { id: user.id };
+          console.log(payload);
+          const token = jwt.encode(payload, config.jwtSecret);
+          return res.json({
+            message: "here goes thy token.",
+            token: token
+          });
+        })
+        .catch((err) => {
+          console.log("Failed!", err);
         });
-      } else {
-        res.status(401).json({message: "passwords did not match"});
-      }
+    }).catch((err) => {
+      console.log("Failed!", err);
     });
   });
 
