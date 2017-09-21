@@ -11,7 +11,7 @@ exports.showList = (req, res) => {
 
 exports.createList = (req, res) => {
   const list = {
-    user_id: req.user.id,
+    user_id: new mongoose.Types.ObjectId(req.user.id),
     title: req.body.title,
     private: req.body.private
   }
