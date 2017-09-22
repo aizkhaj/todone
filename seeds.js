@@ -24,3 +24,4 @@ bcrypt.hash('hello', 10, (err, hash) => {
     admin.save();
   }
 });
+console.log("1 admin user seeded.");

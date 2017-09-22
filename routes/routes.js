@@ -23,7 +23,6 @@ router.route('/login')
       var username = req.body.username;
       var password = req.body.password;
     }
-    console.log(req.body);
     const userPromise = userModel.findOne({ username: username}).exec();
 
     userPromise.then(user => {
@@ -65,6 +64,9 @@ router.route('/user/new')
 router.route('/user/:user_id')
   .get(usersController.showProfile);
 
+router.route('/user/:user_id/delete')
+  .delete(auth.authenticate(), usersController.deleteUser);
+
 router.route('/lists')
   .get(listsController.allLists);
 
@@ -73,6 +75,9 @@ router.route('/lists/:list_id')
 
 router.route('/lists/new')
   .post(auth.authenticate(), listsController.createList);
+
+router.route('/lists/:list_id/delete')
+  .delete(auth.authenticate(), listsController.deleteList);
 
 router.route('/lists/:list_id/items/new')
   .post(itemsController.createItem);
