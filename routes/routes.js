@@ -76,13 +76,17 @@ router.route('/lists/:list_id')
 router.route('/lists/new')
   .post(auth.authenticate(), listsController.createList);
 
+router.route('/lists/:list_id/update')
+  .put(auth.authenticate(), listsController.updateList);
+
 router.route('/lists/:list_id/delete')
   .delete(auth.authenticate(), listsController.deleteList);
 
 router.route('/lists/:list_id/items/new')
   .post(itemsController.createItem);
 
-router.route('items/:item_id/delete')
-  .delete(itemsController.deleteItem);
+router.route('/items/:item_id/update')
+  .put(auth.authenticate(), itemsController.updateItem);
+
 
 module.exports = router;

@@ -19,6 +19,27 @@ exports.createList = (req, res) => {
   res.json({ message: "List created." });
 };
 
+exports.updateList = (req, res) => {
+  List.findById(req.params.list_id, (err, list) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      list.title = req.body.title || list.title;
+      list.private = req.body.private || list.private;
+
+      list.save((err, list) => {
+        if (err) {
+          res.status(500).send(err);
+        }
+        res.status(200).json({
+          message: "List updated.",
+          update: list
+        });
+      });
+    }
+  });
+};
+
 exports.deleteList = (req, res) => {
   // Find the list in question first.
   const listPromise = List.findById(req.params.list_id).exec();
