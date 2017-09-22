@@ -1,6 +1,16 @@
 const mongoose = require('mongoose');
 const Item = mongoose.model('Item');
 
+exports.allItems = (req, res) => {
+  Item.find((err, items) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(items);
+    }
+  });
+}
+
 exports.createItem = (req, res) => {
   const item = {
     title: req.body.title,

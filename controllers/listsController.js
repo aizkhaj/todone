@@ -2,7 +2,13 @@ const mongoose = require('mongoose');
 const List = mongoose.model('List');
 
 exports.allLists = (req, res) => {
-  List.find();
+  List.find((err, lists) => {
+    if (err) {
+      res.status(500).send(err);
+    } else {
+      res.status(200).json(lists);
+    }
+  });
 };
 
 exports.showList = (req, res) => {

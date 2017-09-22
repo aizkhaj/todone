@@ -68,10 +68,10 @@ router.route('/user/:user_id/delete')
   .delete(auth.authenticate(), usersController.deleteUser);
 
 router.route('/lists')
-  .get(listsController.allLists);
+  .get(auth.authenticate(), listsController.allLists);
 
 router.route('/lists/:list_id')
-  .get(listsController.showList);
+  .get(auth.authenticate(), listsController.showList);
 
 router.route('/lists/new')
   .post(auth.authenticate(), listsController.createList);
@@ -81,6 +81,9 @@ router.route('/lists/:list_id/update')
 
 router.route('/lists/:list_id/delete')
   .delete(auth.authenticate(), listsController.deleteList);
+
+router.route('/lists/:list_id/items')
+  .get(auth.authenticate(), itemsController.allItems);
 
 router.route('/lists/:list_id/items/new')
   .post(itemsController.createItem);
