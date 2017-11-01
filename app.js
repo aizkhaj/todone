@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const auth = require('./auth.js')();
+const cors = require('cors');
 
 // instantiate an express app.
 const app = express();
@@ -14,6 +15,7 @@ mongoose.connect(process.env.DATABASE, {
 });
 
 // Middleware
+app.use(cors());
 app.use(bodyParser.json());
 app.use(auth.initialize());
 
