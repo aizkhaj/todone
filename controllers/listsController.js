@@ -6,6 +6,9 @@ exports.allLists = (req, res) => {
     if (err) {
       res.status(500).send(err);
     } else {
+      if (lists === null) {
+        res.json({message: "seems like you don't have any lists showing up here..."});
+      }
       res.status(200).json(lists);
     }
   });

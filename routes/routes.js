@@ -26,7 +26,6 @@ router.route('/login')
     const userPromise = userModel.findOne({ username: username}).exec();
 
     userPromise.then(user => {
-      console.log(user);
       if (!user) {
         return res.status(401).json({ message: "No such user found" });
       }
