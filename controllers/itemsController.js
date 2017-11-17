@@ -15,7 +15,7 @@ exports.allItems = (req, res) => {
 
 exports.createItem = (req, res) => {
   console.log(req.params.list_id);
-  const user = User.findOne({_id: req.user.id}, {lists._id}).exec();
+  const user = User.findOne({_id: req.user.id}, {lists: req.params.list_id}).exec();
   user.then(user => {
     console.log("User list array: ", user);
     user.find({"lists._id": req.params.list_id}, (err, list) => {
