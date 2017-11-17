@@ -1,5 +1,6 @@
 const mongoose = require('mongoose');
 const List = mongoose.model('List');
+const User = mongoose.model('User');
 
 exports.allLists = (req, res) => {
   List.find((err, lists) => {
@@ -7,7 +8,7 @@ exports.allLists = (req, res) => {
       res.status(500).send(err);
     } else {
       if (lists === null) {
-        res.json({message: "seems like you don't have any lists showing up here..."});
+        res.json({ message: "seems like you don't have any lists showing up here..." });
       }
       res.status(200).json(lists);
     }
@@ -19,12 +20,47 @@ exports.showList = (req, res) => {
 };
 
 exports.createList = (req, res) => {
-  const list = {
-    user_id: new mongoose.Types.ObjectId(req.user.id),
-    title: req.body.title,
-    private: req.body.private
-  }
-  List.create(list);
+  const user = User.findById(req.user.id).exec();
+
+  user.then(user => {
+    console.log(user.id);
+      const list = {
+        user_id: req.user.id,
+        title: req.body.title,
+        private: req.body.private
+      }
+      user.lists.push(list);
+      user.save();
+      console.log("this user's lists: ", user.lists);
+  }).catch(err => err);
+
+  // const list = List.findById(req.params.list_id, (err, list) => {
+  //   if (err) {
+  //     res.status(500).send(err);
+  //   } else {
+  //     const item = {
+  //       title: req.body.title,
+  //       complete: false,
+  //     }
+  //     console.log('title: ', list.title);
+  //     list.items.push(item);
+  //     list.save();
+  //     console.log('items on list: ', list.items);
+  //     res.json({ message: 'Item created.' });
+  //   }
+  // });
+  
+
+  // List.
+  //   findOne({ title: req.body.title }).
+  //   populate('user_id').
+  //   exec((err, list) => {
+  //     if (err) {
+  //       console.log('Error:', err);
+  //     }
+  //     console.log('This list belongs to: ', list.user_id);
+  //   });
+
   res.json({ message: "List created." });
 };
 

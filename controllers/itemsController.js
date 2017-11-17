@@ -1,5 +1,7 @@
 const mongoose = require('mongoose');
 const Item = mongoose.model('Item');
+const List = mongoose.model('List');
+const User = mongoose.model('User');
 
 exports.allItems = (req, res) => {
   Item.find((err, items) => {
@@ -12,12 +14,27 @@ exports.allItems = (req, res) => {
 }
 
 exports.createItem = (req, res) => {
-  const item = {
-    title: req.body.title,
-    complete: false
-  }
-  Item.create(item);
-  res.json({ message: 'Item created.' });
+  console.log(req.params.list_id);
+  const user = User.findOne({_id: req.user.id}, {lists._id}).exec();
+  user.then(user => {
+    console.log("User list array: ", user);
+    user.find({"lists._id": req.params.list_id}, (err, list) => {
+      console.log("List: ", user.list);
+      if (err) {
+        res.status(500).send(err);
+      } else {
+        const item = {
+          title: req.body.title,
+          complete: false,
+        }
+        console.log('title: ', list.title);
+        list.items.push(item);
+        list.save();
+        console.log('items on list: ', list.items);
+        res.json({ message: 'Item created.' });
+      }
+    });
+  }).catch(err => console.log(err));
 };
 
 exports.updateItem = (req, res) => {

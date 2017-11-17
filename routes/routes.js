@@ -18,39 +18,7 @@ router.route('/')
   });
 
 router.route('/login')
-  .post((req, res) => {
-    if (req.body.username && req.body.password) {
-      var username = req.body.username;
-      var password = req.body.password;
-    }
-    const userPromise = userModel.findOne({ username: username}).exec();
-
-    userPromise.then(user => {
-      if (!user) {
-        return res.status(401).json({ message: "No such user found" });
-      }
-      
-      bcrypt.compare(req.body.password, user.password)
-        .then((response) => {
-          if (!response) {
-            return res.status(401).json({message: "passwords did not match"});
-          }
-        // res === true
-          const payload = { id: user.id };
-          console.log(payload);
-          const token = jwt.encode(payload, config.jwtSecret);
-          return res.json({
-            message: "here goes thy token.",
-            token: token
-          });
-        })
-        .catch((err) => {
-          console.log("Failed!", err);
-        });
-    }).catch((err) => {
-      console.log("Failed!", err);
-    });
-  });
+  .post(usersController.loginUser);
 
 router.route('/user')
   .get(auth.authenticate(), (req, res) => {
@@ -85,7 +53,7 @@ router.route('/lists/:list_id/items')
   .get(auth.authenticate(), itemsController.allItems);
 
 router.route('/lists/:list_id/items/new')
-  .post(itemsController.createItem);
+  .post(auth.authenticate(), itemsController.createItem);
 
 router.route('/items/:item_id/update')
   .put(auth.authenticate(), itemsController.updateItem);

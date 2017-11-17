@@ -15,7 +15,7 @@ const userSchema = new Schema({
     required: true
   },
   lists: [List.schema]
-  // embedded Lists document/model here so that we can say that each User has their own array of list objects.
+  // if we have [List.schema] then that would have been the way for embedding List. Embedded Lists document/model here so that we can say that each User has their own array of list objects.
 });
 
 // This creates a model using the specified schema.

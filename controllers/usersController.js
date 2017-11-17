@@ -1,6 +1,10 @@
 const mongoose = require('mongoose');
 const User = mongoose.model('User');
+const List = mongoose.model('List');
 const bcrypt = require('bcryptjs');
+const jwt = require("jwt-simple");
+const passport = require('passport');
+const config = require('../config.js');
 
 exports.createUser = (req, res) => {
   bcrypt.hash(req.body.password, 10, (err, hash) => {
@@ -16,6 +20,49 @@ exports.createUser = (req, res) => {
     }
   });
   res.json({ message: "User created" });
+}
+
+exports.loginUser = (req, res) => {
+  if (req.body.username && req.body.password) {
+    var username = req.body.username;
+    var password = req.body.password;
+  }
+  const userPromise = User.findOne({ username: username }).exec();
+
+  userPromise.then(user => {
+    if (!user) {
+      return res.status(401).json({ message: "No such user found" });
+    }
+
+    bcrypt.compare(req.body.password, user.password)
+      .then((response) => {
+        if (!response) {
+          return res.status(401).json({ message: "passwords did not match" });
+        }
+        // res === true
+        const payload = { id: user.id };
+        console.log(payload);
+        const token = jwt.encode(payload, config.jwtSecret);
+        return res.json({
+          message: "here goes thy token.",
+          token: token
+        });
+      })
+      .catch((err) => {
+        console.log("Failed!", err);
+      });
+
+      // List.find({user_id: user.id})
+      // .populate('lists')
+      // .exec((err, lists) => {
+      //   if (err) {
+      //     console.log("error: ", err);
+      //   }
+      //   console.log('user lists: ', lists);
+      // })
+  }).catch((err) => {
+    console.log("Failed!", err);
+  });
 }
 
 exports.deleteUser = (req, res) => {
@@ -39,11 +86,6 @@ exports.deleteUser = (req, res) => {
     .catch((err) => {
       console.log("Whoops!", err);
     });
-
-
-
-
-
   // User.findByIdAndRemove(req.user.id);
 }
 

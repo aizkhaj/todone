@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
-const Item = require('../models/Item')
+const Item = require('../models/Item');
+const User = require('../models/User');
 mongoose.Promise = global.Promise;
 
 const listSchema = new Schema({
