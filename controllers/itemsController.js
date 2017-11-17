@@ -18,22 +18,17 @@ exports.createItem = (req, res) => {
   const user = User.findOne({_id: req.user.id}, {lists: req.params.list_id}).exec();
   user.then(user => {
     console.log("User list array: ", user);
-    user.find({"lists._id": req.params.list_id}, (err, list) => {
-      console.log("List: ", user.list);
-      if (err) {
-        res.status(500).send(err);
-      } else {
+    const list = user.lists[0];
+    console.log('list: ', list);
         const item = {
           title: req.body.title,
           complete: false,
         }
-        console.log('title: ', list.title);
+        console.log('list title: ', list.title);
         list.items.push(item);
-        list.save();
+        user.save();
         console.log('items on list: ', list.items);
         res.json({ message: 'Item created.' });
-      }
-    });
   }).catch(err => console.log(err));
 };
 
