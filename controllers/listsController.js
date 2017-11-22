@@ -3,16 +3,14 @@ const List = mongoose.model('List');
 const User = mongoose.model('User');
 
 exports.allLists = (req, res) => {
-  List.find((err, lists) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      if (lists === null) {
-        res.json({ message: "seems like you don't have any lists showing up here..." });
-      }
-      res.status(200).json(lists);
+  const user = User.findById(req.user.id).exec();
+
+  user.then( user => {
+    if (user.lists === null) {
+      res.json({ message: "seems like you don't have any lists showing up here..." });
     }
-  });
+    res.status(200).json(user.lists);
+  }).catch(err => res.status(500).send(err));
 };
 
 exports.showList = (req, res) => {
@@ -23,7 +21,7 @@ exports.createList = (req, res) => {
   const user = User.findById(req.user.id).exec();
 
   user.then(user => {
-    console.log(user.id);
+
       const list = {
         user_id: req.user.id,
         title: req.body.title,
