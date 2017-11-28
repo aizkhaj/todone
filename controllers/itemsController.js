@@ -4,51 +4,58 @@ const List = mongoose.model('List');
 const User = mongoose.model('User');
 
 exports.allItems = (req, res) => {
-  Item.find((err, items) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      res.status(200).json(items);
+  const user = User.findById(req.user.id).exec();
+  
+  user.then( user => {
+    const list = user.lists.id(req.params.list_id);
+
+    if (list.items === null) {
+      res.json({ message: "seems like there aren't any items yet..." });
     }
-  });
+
+    res.status(200).json(list.items);
+  }).catch(err => res.status(500).send(err));
+  
 }
 
 exports.createItem = (req, res) => {
-  console.log(req.params.list_id);
-  const user = User.findOne({ _id: req.user.id }, { lists: req.params.list_id }).exec();
+  const user = User.findById(req.user.id).exec();
+  
   user.then(user => {
-    console.log("User list array: ", user);
-    const list = user.lists[0];
-    console.log('list: ', list);
-    const item = {
-      title: req.body.title,
-      complete: false,
-    }
-    console.log('list title: ', list.title);
-    list.items.push(item);
-    user.save();
-    console.log('items on list: ', list.items);
-    res.json({ message: 'Item created.' });
-  }).catch(err => console.log(err));
+      const list = user.lists.id(req.params.list_id);
+      console.log("is this the correct list? ", list);
+
+      const item = {
+        title: req.body.title,
+        complete: false
+      }
+
+      list.items.push(item);
+      user.save();
+      console.log("this user's tasks: ", list.items);
+      res.json({message: 'new item successfully saved.'})
+  }).catch(err => res.status(500).send(err));
 };
 
 exports.updateItem = (req, res) => {
-  Item.findById(req.params.item_id, (err, item) => {
-    if (err) {
-      res.status(500).send(err);
-    } else {
-      item.title = req.body.title || item.title;
-      item.complete = req.body.complete || item.complete;
-
-      item.save((err, item) => {
-        if (err) {
-          res.status(500).send(err);
-        }
-        res.status(200).json({
-          message: "Item updated.",
-          update: item
-        });
-      });
+  // incomplete
+  const user = User.findById(req.user.id).exec();
+  
+  user.then(user => {
+    const list = user.lists.id(req.params.list_id);
+    const items = list.items;
+    const item = items.id()
+    const task = {
+      title: req.body.title,
+      complete: false
     }
-  });
+
+    list.items.push(task);
+    user.save();
+    console.log("this user's tasks: ", list.items);
+    res.status(200).json({
+      message: "Item updated.",
+      update: item
+    });
+  }).catch(err => res.status(500).send(err));
 };
