@@ -23,8 +23,6 @@ exports.createItem = (req, res) => {
   
   user.then(user => {
       const list = user.lists.id(req.params.list_id);
-      console.log("is this the correct list? ", list);
-
       const item = {
         title: req.body.title,
         complete: false
@@ -32,27 +30,19 @@ exports.createItem = (req, res) => {
 
       list.items.push(item);
       user.save();
-      console.log("this user's tasks: ", list.items);
       res.json({message: 'new item successfully saved.'})
   }).catch(err => res.status(500).send(err));
 };
 
 exports.updateItem = (req, res) => {
-  // incomplete
   const user = User.findById(req.user.id).exec();
   
   user.then(user => {
-    const list = user.lists.id(req.params.list_id);
-    const items = list.items;
-    const item = items.id()
-    const task = {
-      title: req.body.title,
-      complete: false
-    }
+    const list = user.lists.id(req.body.list_id);
+    const item = list.items.id(req.params.item_id);
+    item.complete = req.body.complete || item.complete;
 
-    list.items.push(task);
     user.save();
-    console.log("this user's tasks: ", list.items);
     res.status(200).json({
       message: "Item updated.",
       update: item

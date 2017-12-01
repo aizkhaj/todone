@@ -56,7 +56,7 @@ router.route('/lists/:list_id/items/new')
   .post(auth.authenticate(), itemsController.createItem);
 
 router.route('/items/:item_id/update')
-  .put(auth.authenticate(), itemsController.updateItem);
+  .patch(auth.authenticate(), itemsController.updateItem);
 
 
 module.exports = router;

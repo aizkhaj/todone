@@ -28,41 +28,19 @@ exports.createList = (req, res) => {
         private: req.body.private
       }
       user.lists.push(list);
-      user.save();
-      console.log("this user's lists: ", user.lists);
+      user
+        .save()
+        .then(
+          user => {
+            res.json({ message: "List created.", list_id: user.lists[user.lists.length - 1].id });
+          }
+        )
+        .catch();
   }).catch(err => err);
-
-  // const list = List.findById(req.params.list_id, (err, list) => {
-  //   if (err) {
-  //     res.status(500).send(err);
-  //   } else {
-  //     const item = {
-  //       title: req.body.title,
-  //       complete: false,
-  //     }
-  //     console.log('title: ', list.title);
-  //     list.items.push(item);
-  //     list.save();
-  //     console.log('items on list: ', list.items);
-  //     res.json({ message: 'Item created.' });
-  //   }
-  // });
-  
-
-  // List.
-  //   findOne({ title: req.body.title }).
-  //   populate('user_id').
-  //   exec((err, list) => {
-  //     if (err) {
-  //       console.log('Error:', err);
-  //     }
-  //     console.log('This list belongs to: ', list.user_id);
-  //   });
-
-  res.json({ message: "List created." });
 };
 
 exports.updateList = (req, res) => {
+  // this won't work anymore due to changing db relationship structure.
   List.findById(req.params.list_id, (err, list) => {
     if (err) {
       res.status(500).send(err);
@@ -84,7 +62,7 @@ exports.updateList = (req, res) => {
 };
 
 exports.deleteList = (req, res) => {
-  // Find the list in question first.
+  // this won't work anymore due to changing db relationship structure.
   const listPromise = List.findById(req.params.list_id).exec();
 
   listPromise
