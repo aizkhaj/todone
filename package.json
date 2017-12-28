@@ -1,9 +1,10 @@
 {
   "name": "todone",
   "version": "1.0.0",
-  "description": "todone is a todo api for a bloc project.",
+  "description": "todone is a todo api for a react project.",
   "main": "app.js",
   "scripts": {
+    "start": "node app.js",
     "test": "jasmine"
   },
   "repository": {

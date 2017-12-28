@@ -10,7 +10,7 @@ const app = express();
 require('dotenv').config({path: 'variables.env'});
 
 // Connect to our db
-mongoose.connect(process.env.DATABASE, {
+mongoose.connect(process.env.MONGODB_URI || process.env.DATABASE, {
   useMongoClient: true
 });
 
